@@ -11,6 +11,7 @@ from scrapy import Selector, Spider
 from scrapy.http import Request
 import time
 from items import UserItem
+import csv
 
 
 class UserSpider(Spider):
@@ -18,7 +19,14 @@ class UserSpider(Spider):
     base_url = "https://weibo.cn"
 
     def start_requests(self):
-        user_ids = ['1087770692', '1699432410', '1266321801']
+        import csv
+        with open(r'C:\Users\隋\Desktop\体温情况\Tweets.csv', 'r', errors='ignore') as f:
+            reader = csv.reader(f)
+            user_ids = []
+            for i in reader:
+                user_id = i[3]
+                user_ids.append(user_id)
+        #user_ids = ['1087770692', '1699432410', '1266321801']
         urls = [f'{self.base_url}/{user_id}/info' for user_id in user_ids]
         for url in urls:
             yield Request(url, callback=self.parse)
